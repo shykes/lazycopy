@@ -15,7 +15,7 @@ class Copy(aufs.AUFS):
     aufsdir = property(get_aufsdir)
 
     def get_changes(self):
-        return os.path.join(self.aufsdir, "changes")
+        return os.path.join(self.aufsdir, "0")
     changes = property(get_changes)
 
     def get_sources(self):
@@ -24,7 +24,7 @@ class Copy(aufs.AUFS):
     def set_sources(self, sources):
         self.create()
         if sources:
-            self.layers = [(self.aufsdir, "rw")] + [(path, "ro") for path in sources]
+            self.layers = [(self.changes, "rw")] + [(path, "ro") for path in sources]
         else:
             self.layers = []
 
