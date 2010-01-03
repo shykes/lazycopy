@@ -5,14 +5,23 @@ import sys
 from lazycopy import Copy
 
 def main():
-    if len(sys.argv[1:]) < 2:
-        print "Usage: %s source_dir [source_dir ...] destination_dir" % sys.argv[0]
+    dirs = sys.argv[1:]
+    if not dirs:
+        print "Usage: %s [source_dir ...] destination_dir" % sys.argv[0]
         sys.exit(1)
-
     sources = sys.argv[1:-1]
     dest = sys.argv[-1]
-    print "%s -> %s" % (sources, dest)
-    Copy(dest).sources = sources
+    if not sources:
+        layers = Copy(dest).layers
+        if layers:
+            print "(Top)"
+        for (idx, (path, perm)) in enumerate(layers):
+            print "%s\t%s\t%s" % (len(layers) - idx - 1, perm, path)
+        if layers:
+            print "(Bottom)"
+    else:
+        print "%s -> %s" % (sources, dest)
+        Copy(dest).sources = sources
 
 if __name__ == "__main__":
     main()
